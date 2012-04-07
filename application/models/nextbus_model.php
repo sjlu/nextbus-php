@@ -38,25 +38,61 @@ class Nextbus_model extends CI_Model {
          $req = $this->request();
          $lines = array();
          $stops = array();
+         $temp = array();
 
-         foreach ($req['route'] as $route)
+         foreach ($req['route'] as &$route)
          {
             $line = array();
 
-            $line['id'] = $route['@attributes']['tag'];
+            $line['tag'] = $route['@attributes']['tag'];
             $line['title'] = $route['@attributes']['title'];
             
             foreach ($route['stop'] as $stop)
             {
                $stop_id = $stop['@attributes']['stopId'];
+               $stop_tag = $stop['@attributes']['tag'];
                $stop_title = $stop['@attributes']['title'];
 
-               $line['stops'][] = array(
+               $line['stops'][$stop_tag] = array(
                   'id' => $stop_id, 
+                  'tag' => $stop_tag,
                   'title' => $stop_title);
             }
 
+            if (!isset($route['direction'][0]))
+               $route['direction'] = array(0 => $route['direction']);
+
+            foreach ($route['direction'] as $direction)
+            {
+               $dir_data = array('title' => $direction['@attributes']['title'],
+                  'tag' => $direction['@attributes']['tag']);
+               
+               foreach ($direction['stop'] as $stop)
+               {
+                  $stop_tag = $stop['@attributes']['tag'];
+                  $line['stops'][$stop_tag]['direction'] = $dir_data;
+               }
+            }
+
             $lines[$line['title']] = $line;
+         }
+
+         foreach ($lines as &$line)
+         {
+            $line_tag = $line['tag'];
+            $line_title = $line['title'];
+            
+            foreach ($line['stops'] as $stop)
+            {
+               $stops[$stop['title']][$stop['tag']]['id'] = $stop['id'];
+               $stops[$stop['title']][$stop['tag']]['tag'] = $stop['tag'];
+               $stops[$stop['title']][$stop['tag']]['title'] = $stop['title'];
+
+               $stops[$stop['title']][$stop['tag']]['lines'][$line['tag']] = array(
+                  'tag' => $line['tag'],
+                  'title' => $line['title'],
+                  'direction' => $stop['direction']);
+            }
          }
 
          $data['lines'] = $lines;
