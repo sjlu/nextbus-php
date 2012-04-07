@@ -26,7 +26,7 @@ class Nextbus_model extends CI_Model {
       $this->PARAMS .= $param."=".$value;
    }
 
-   public function get_route_config($agency)
+   public function get_config($agency)
    {
       $this->add_param('a', $agency);
       $this->add_param('command', 'routeConfig');
@@ -36,7 +36,8 @@ class Nextbus_model extends CI_Model {
       if (!$data = $this->cache->get($this->PARAMS))
       {
          $req = $this->request();
-         $data = array();
+         $lines = array();
+         $stops = array();
 
          foreach ($req['route'] as $route)
          {
@@ -47,12 +48,12 @@ class Nextbus_model extends CI_Model {
             
             foreach ($route['stop'] as $stop)
             {
-               $line['id']['stops'][] = array(
+               $line['stops'][] = array(
                   'id' => $stop['@attributes']['stopId'], 
                   'title' => $stop['@attributes']['title']);
             }
 
-            $data[] = $line;
+            $lines[] = $line;
          }
 
          $this->cache->save($this->PARAMS, $data, 60); 
