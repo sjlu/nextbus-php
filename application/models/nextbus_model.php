@@ -48,14 +48,19 @@ class Nextbus_model extends CI_Model {
             
             foreach ($route['stop'] as $stop)
             {
+               $stop_id = $stop['@attributes']['stopId'];
+               $stop_title = $stop['@attributes']['title'];
+
                $line['stops'][] = array(
-                  'id' => $stop['@attributes']['stopId'], 
-                  'title' => $stop['@attributes']['title']);
+                  'id' => $stop_id, 
+                  'title' => $stop_title);
             }
 
-            $lines[] = $line;
+            $lines[$line['title']] = $line;
          }
 
+         $data['lines'] = $lines;
+         $data['stops'] = $stops;
          $this->cache->save($this->PARAMS, $data, 60); 
       }
 
