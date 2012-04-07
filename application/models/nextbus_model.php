@@ -31,7 +31,7 @@ class Nextbus_model extends CI_Model {
       $this->add_param('a', $agency);
       $this->add_param('command', 'routeConfig');
          
-      $this->load->driver('cache', array('adapter' => 'memcached', 'backup' => 'file'));
+      $this->load->driver('cache', array('adapter' => 'file'));
       
       if (!$data = $this->cache->get($this->PARAMS))
       {
