@@ -108,6 +108,34 @@ class Nextbus_model extends CI_Model {
       return $data;
    }
 
+   private function process_predictions($req)
+   {
+      $data = array();
+      foreach ($req['predictions'] as $set)
+      {
+         if (isset($set['@attributes']['dirTitleBecauseNoPredictions']))
+            continue;
+
+         $predictions = array();
+         foreach ($set['direction']['prediction'] as $time)
+         {
+            $time = $time['@attributes'];
+            $timeset = array(
+               'seconds' => $time['seconds'],
+               'minutes' => $time['minutes'],
+               'time' => $time['epochTime']
+            );
+
+            $predictions[] = $timeset;
+         }
+
+         $set = $set['@attributes'];
+         $data[$set['routeTag']][$set['stopTag']] = $predictions;
+      }
+
+      return $data;
+   }
+
    public function get_predictions($agency)
    {
       $config = $this->get_config($agency);
@@ -132,31 +160,7 @@ class Nextbus_model extends CI_Model {
             }
          }
    
-         $req = $this->request();
-
-         $data = array();
-         foreach ($req['predictions'] as $set)
-         {
-            if (isset($set['@attributes']['dirTitleBecauseNoPredictions']))
-               continue;
-
-            $predictions = array();
-            foreach ($set['direction']['prediction'] as $time)
-            {
-               $time = $time['@attributes'];
-               $timeset = array(
-                  'seconds' => $time['seconds'],
-                  'minutes' => $time['minutes'],
-                  'time' => $time['epochTime']
-               );
-
-               $predictions[] = $timeset;
-            }
-
-            $set = $set['@attributes'];
-            $data[$set['routeTag']][$set['stopTag']] = $predictions;
-         }
-
+         $data = $this->process_predictions($this->request());
          $this->cache->save('all-predictions-'.$agency, $data, 20);
       }
 
