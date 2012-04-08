@@ -53,12 +53,12 @@ class Nextbus_model extends CI_Model {
             
             foreach ($route['stop'] as $stop)
             {
-               $stop_id = $stop['@attributes']['stopId'];
+               //$stop_id = $stop['@attributes']['stopId'];
                $stop_tag = $stop['@attributes']['tag'];
                $stop_title = $stop['@attributes']['title'];
 
                $line['stops'][$stop_tag] = array(
-                  'id' => $stop_id, 
+               //   'id' => $stop_id, 
                   'tag' => $stop_tag,
                   'title' => $stop_title);
             }
@@ -88,7 +88,7 @@ class Nextbus_model extends CI_Model {
             
             foreach ($line['stops'] as $stop)
             {
-               $stops[$stop['title']][$stop['tag']]['id'] = $stop['id'];
+               //$stops[$stop['title']][$stop['tag']]['id'] = $stop['id'];
                $stops[$stop['title']][$stop['tag']]['tag'] = $stop['tag'];
                $stops[$stop['title']][$stop['tag']]['title'] = $stop['title'];
 
