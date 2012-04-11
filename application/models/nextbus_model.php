@@ -117,9 +117,6 @@ class Nextbus_model extends CI_Model {
             continue;
 
          $predictions = array();
-         echo '<pre>';
-         print_r($set);
-         echo '</pre>';
          
          if (!isset($set['direction']['prediction'][0]))
             $set['direction']['prediction'] = array(0 => $set['direction']['prediction']);
