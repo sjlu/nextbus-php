@@ -96,7 +96,8 @@ class Nextbus_model extends CI_Model {
                $stops[$stop['title']][$stop['tag']]['lines'][$line['tag']] = array(
                   'tag' => $line['tag'],
                   'title' => $line['title'],
-                  'direction' => $stop['direction']);
+                  'direction' => $stop['direction']
+               );
             }
          }
 
