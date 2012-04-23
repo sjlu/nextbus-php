@@ -77,8 +77,12 @@ class Nextbus_model extends CI_Model {
                   $line['stops'][$stop_tag]['direction'] = $dir_data;
                }
             }
-            
-            ksort($line['stops']);
+
+
+            usort($line['stops'], function($a, $b)
+            {
+               return strcmp($a['title'], $b['title']);
+            });
             $lines[$line['title']] = $line;
          }
 
