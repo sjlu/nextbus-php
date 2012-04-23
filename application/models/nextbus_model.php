@@ -100,6 +100,8 @@ class Nextbus_model extends CI_Model {
          }
 
          $data['lines'] = $lines;
+
+         ksort($stops);
          $data['stops'] = $stops;
          $this->cache->save($this->PARAMS, $data, 86400); 
       }
