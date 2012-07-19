@@ -10,7 +10,7 @@ class Frontpage extends CI_Controller {
       $config = $this->nextbus_model->get_config($agency); 
       $predictions = $this->nextbus_model->get_predictions($agency);
 
-      $this->load->view('frontpage' array(
+      $this->load->view('frontpage', array(
          'config' => $config,
          'predictions' => $predictions
       ));
