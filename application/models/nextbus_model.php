@@ -14,7 +14,8 @@ class Nextbus_model extends CI_Model {
    private function request()
    {
       $this->load->library('format');
-      return $this->format->factory(file_get_contents($this->URL . $this->PARAMS), 'xml')->to_array();
+      $this->load->library('curl');
+      return $this->format->factory($this->curl->simple_get($this->URL . $this->PARAMS), 'xml')->to_array();
    }
 
    private function clear_params()
