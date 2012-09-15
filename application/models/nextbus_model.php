@@ -8,7 +8,7 @@ class Nextbus_model extends CI_Model {
    public function __construct()
    {
       parent::__construct();
-      $this->load->driver('cache', array('adapter' => 'file'));
+      $this->load->driver('cache', array('adapter' => 'dummy'));
    }
 
    private function request()
@@ -57,11 +57,18 @@ class Nextbus_model extends CI_Model {
                //$stop_id = $stop['@attributes']['stopId'];
                $stop_tag = $stop['@attributes']['tag'];
                $stop_title = $stop['@attributes']['title'];
+               $lat = $stop['@attributes']['lat'];
+               $lng = $stop['@attributes']['lon'];
 
                $line['stops'][$stop_tag] = array(
                //   'id' => $stop_id, 
                   'tag' => $stop_tag,
-                  'title' => $stop_title);
+                  'title' => $stop_title,
+                  'latLng' => array(
+                     'lat' => $lat,
+                     'lng' => $lng
+                  )
+               );
             }
 
             if (!isset($route['direction'][0]))
@@ -97,6 +104,7 @@ class Nextbus_model extends CI_Model {
                //$stops[$stop['title']][$stop['tag']]['id'] = $stop['id'];
                $stops[$stop['title']][$stop['tag']]['tag'] = $stop['tag'];
                $stops[$stop['title']][$stop['tag']]['title'] = $stop['title'];
+               $stops[$stop['title']][$stop['tag']]['latLng'] = $stop['latLng'];
 
                $stops[$stop['title']][$stop['tag']]['lines'][$line['tag']] = array(
                   'tag' => $line['tag'],
@@ -134,9 +142,9 @@ class Nextbus_model extends CI_Model {
          {
             $time = $time['@attributes'];
             $timeset = array(
-               'seconds' => $time['seconds'],
+               // 'seconds' => $time['seconds'],
                'minutes' => $time['minutes'],
-               'time' => $time['epochTime']
+               // 'time' => $time['epochTime']
             );
 
             $predictions[] = $timeset;
