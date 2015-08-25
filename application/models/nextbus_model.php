@@ -33,6 +33,13 @@ class Nextbus_model extends CI_Model {
       $this->PARAMS .= $param."=".$value;
    }
 
+   private function sanitize($value) 
+   {
+      $value = str_replace('/', '-', $value);
+      $value = str_replace('.', '', $value);
+      return $value;
+   }
+
    public function get_config($agency)
    {
       $this->add_param('a', $agency);
@@ -50,13 +57,13 @@ class Nextbus_model extends CI_Model {
             $line = array();
 
             $line['tag'] = $route['@attributes']['tag'];
-            $line['title'] = $route['@attributes']['title'];
+            $line['title'] = $this->sanitize($route['@attributes']['title']);
             
             foreach ($route['stop'] as $stop)
             {
                //$stop_id = $stop['@attributes']['stopId'];
                $stop_tag = $stop['@attributes']['tag'];
-               $stop_title = $stop['@attributes']['title'];
+               $stop_title = $this->sanitize($stop['@attributes']['title']);
                $lat = $stop['@attributes']['lat'];
                $lng = $stop['@attributes']['lon'];
 
